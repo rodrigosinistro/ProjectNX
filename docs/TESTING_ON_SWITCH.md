@@ -1,16 +1,19 @@
 # Teste no Switch OLED
 
-## Objetivo da versão 0.1
+## Objetivo da versão 0.2
 
-Confirmar que a base abre em title mode, mostra a interface, reconhece controles
-e encerra sem travar. Nenhuma conta é necessária nesta fase.
+Confirmar que a base abre em title mode, reconhece controles e estabelece uma
+conexão HTTPS/TLS válida com o Microsoft Identity. Nenhuma conta é necessária
+nesta fase.
 
 ## Checklist
 
 - [ ] O ícone aparece no Homebrew Menu.
 - [ ] O aplicativo inicia segurando `R` ao abrir um jogo.
 - [ ] O título `ProjectNX` e a versão aparecem.
-- [ ] `A` percorre login, catálogo, conexão e transmissão simulados.
+- [ ] `A` executa o teste de rede e depois percorre as telas simuladas.
+- [ ] A tela informa `Rede segura: OK`.
+- [ ] O diagnóstico informa `Rede: online (HTTP 200)`.
 - [ ] `B` retorna para a tela anterior.
 - [ ] `X` exibe o diagnóstico.
 - [ ] O diagnóstico identifica corretamente portátil ou dock.
@@ -28,4 +31,3 @@ e encerra sem travar. Nenhuma conta é necessária nesta fase.
 - fotografia da mensagem apresentada.
 
 Não compartilhe arquivos de token ou dados da conta.
-

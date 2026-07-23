@@ -12,26 +12,30 @@ para outros backends no futuro.
 
 ## Estado atual
 
-Versão `0.1.0-preview`.
+Versão `0.2.0-preview`.
 
-Esta primeira versão é um preview técnico do aplicativo. Ela valida:
+Esta versão mantém a interface nativa e adiciona a primeira integração real:
 
 - inicialização como homebrew nativo;
 - leitura de Joy-Cons e Pro Controller;
 - navegação entre os estados principais;
 - detecção de modo portátil ou dock;
+- inicialização dos sockets da libnx;
+- conexão HTTPS/TLS com o endpoint oficial do Microsoft Identity;
+- validação do certificado do servidor;
+- leitura segura de `config.ini`;
 - tratamento básico de erros;
 - núcleo de estados testável fora do Switch.
 
-Ela ainda **não autentica nem inicia uma transmissão real**. As próximas versões
-adicionarão autenticação por código de dispositivo, catálogo e, por último, a
-sessão WebRTC com decodificação por hardware.
+Ela ainda **não autentica nem inicia uma transmissão real**. O próximo passo é
+usar um aplicativo Microsoft registrado pelo projeto para solicitar o código de
+dispositivo sem reutilizar identificadores de terceiros.
 
 ## Controles do preview
 
 | Botão | Ação |
 | --- | --- |
-| `A` | Avançar na demonstração |
+| `A` | Avançar e executar o teste real de rede |
 | `B` | Voltar |
 | `X` | Mostrar ou ocultar informações técnicas |
 | `+` | Encerrar |
@@ -43,6 +47,7 @@ Requisitos:
 - devkitPro;
 - devkitA64;
 - libnx;
+- libcurl para Switch;
 - `DEVKITPRO` configurado no ambiente.
 
 Com a toolchain instalada:
@@ -67,7 +72,7 @@ o ambiente devkitA64. Para baixar:
 
 1. Abra a aba **Actions** do repositório.
 2. Selecione a execução mais recente de **Build ProjectNX**.
-3. Baixe o artefato `ProjectNX-v0.1.0-preview`.
+3. Baixe o artefato `ProjectNX-v0.2.0-preview`.
 4. Extraia o ZIP e copie a pasta `switch` para a raiz do cartão SD.
 
 ## Instalação no Switch
@@ -75,6 +80,10 @@ o ambiente devkitA64. Para baixar:
 1. Copie a pasta `switch/projectnx` do pacote para a raiz do cartão SD.
 2. Inicie o Homebrew Menu em **title mode**, segurando `R` enquanto abre um jogo.
 3. Abra o ProjectNX.
+
+O arquivo `config.example.ini` documenta a configuração planejada. Ele não
+contém credenciais. Quando tivermos nosso `client_id`, copie-o como `config.ini`
+e preencha somente o identificador público do aplicativo.
 
 O modo Álbum oferece memória limitada e não será suportado para streaming.
 

@@ -8,15 +8,15 @@
 - [x] Detecção portátil/dock
 - [x] Testes locais do núcleo
 - [x] Workflow de compilação automática
-- [ ] Compilação com devkitA64
-- [ ] Teste físico no Switch OLED
+- [x] Compilação com devkitA64
+- [x] Teste físico no Switch OLED
 
 ## 0.2 — Base de rede e interface
 
-- [ ] Inicialização de sockets
-- [ ] Cliente HTTPS/TLS
+- [x] Inicialização de sockets
+- [x] Cliente HTTPS/TLS
 - [ ] JSON
-- [ ] Configuração persistente
+- [x] Configuração persistente
 - [ ] Logger com remoção de dados sensíveis
 - [ ] Interface gráfica inicial
 

@@ -5,6 +5,9 @@
 #include <stdint.h>
 
 typedef uint64_t u64;
+typedef uint32_t Result;
+
+#define R_FAILED(result) ((result) != 0U)
 
 typedef struct {
     uint32_t reserved;
@@ -36,5 +39,7 @@ u64 padGetButtonsDown(const PadState *pad);
 bool appletMainLoop(void);
 AppletOperationMode appletGetOperationMode(void);
 void svcSleepThread(int64_t nanoseconds);
+Result socketInitializeDefault(void);
+void socketExit(void);
 
 #endif

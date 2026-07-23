@@ -43,8 +43,18 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
         return;
     }
 
+    if (action == PNX_ACTION_NETWORK_READY) {
+        if (app->state == PNX_STATE_NETWORK_CHECK) {
+            pnx_transition(app, PNX_STATE_AUTH_REQUIRED);
+        }
+        return;
+    }
+
     if (action == PNX_ACTION_BACK) {
         switch (app->state) {
+        case PNX_STATE_NETWORK_CHECK:
+            pnx_transition(app, PNX_STATE_WELCOME);
+            break;
         case PNX_STATE_AUTH_REQUIRED:
             pnx_transition(app, PNX_STATE_WELCOME);
             break;
@@ -75,7 +85,9 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
 
     switch (app->state) {
     case PNX_STATE_WELCOME:
-        pnx_transition(app, PNX_STATE_AUTH_REQUIRED);
+        pnx_transition(app, PNX_STATE_NETWORK_CHECK);
+        break;
+    case PNX_STATE_NETWORK_CHECK:
         break;
     case PNX_STATE_AUTH_REQUIRED:
         pnx_transition(app, PNX_STATE_AUTH_WAITING);
@@ -129,7 +141,10 @@ bool pnx_app_can_transition(PnxState from, PnxState to)
     case PNX_STATE_BOOT:
         return to == PNX_STATE_WELCOME || to == PNX_STATE_ERROR;
     case PNX_STATE_WELCOME:
-        return to == PNX_STATE_AUTH_REQUIRED || to == PNX_STATE_ERROR;
+        return to == PNX_STATE_NETWORK_CHECK || to == PNX_STATE_ERROR;
+    case PNX_STATE_NETWORK_CHECK:
+        return to == PNX_STATE_WELCOME || to == PNX_STATE_AUTH_REQUIRED ||
+               to == PNX_STATE_ERROR;
     case PNX_STATE_AUTH_REQUIRED:
         return to == PNX_STATE_WELCOME || to == PNX_STATE_AUTH_WAITING ||
                to == PNX_STATE_ERROR;
@@ -159,6 +174,7 @@ const char *pnx_state_name(PnxState state)
     static const char *const names[PNX_STATE_COUNT] = {
         "BOOT",
         "WELCOME",
+        "NETWORK_CHECK",
         "AUTH_REQUIRED",
         "AUTH_WAITING",
         "CATALOG",
@@ -179,6 +195,7 @@ const char *pnx_state_title(PnxState state)
     static const char *const titles[PNX_STATE_COUNT] = {
         "Inicializando",
         "Bem-vindo ao ProjectNX",
+        "Verificando conexao",
         "Conectar conta Microsoft",
         "Aguardando autorizacao",
         "Catalogo de jogos",
@@ -198,8 +215,9 @@ const char *pnx_state_description(PnxState state)
 {
     static const char *const descriptions[PNX_STATE_COUNT] = {
         "Carregando os servicos essenciais.",
-        "Preview tecnico da interface nativa.",
-        "A versao futura usara login por codigo de dispositivo.",
+        "Pressione A para testar a conexao segura.",
+        "Testando DNS, sockets e HTTPS/TLS com a Microsoft.",
+        "Rede pronta. O login usara codigo de dispositivo.",
         "Simulacao: confirme para concluir o login.",
         "Simulacao: um jogo demonstrativo esta selecionado.",
         "Simulacao: negociando a sessao WebRTC.",
@@ -213,4 +231,3 @@ const char *pnx_state_description(PnxState state)
     }
     return descriptions[state];
 }
-

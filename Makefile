@@ -13,15 +13,16 @@ SOURCES       := source
 INCLUDES      := include
 APP_TITLE     := ProjectNX
 APP_AUTHOR    := ProjectNX Contributors
-APP_VERSION   := 0.1.0
+APP_VERSION   := 0.2.0
 
 ARCH          := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
-CFLAGS        := -g -Wall -Wextra -Werror -O2 -ffunction-sections $(ARCH)
+CFLAGS        := -g -Wall -Wextra -Werror -O2 -ffunction-sections $(ARCH) \
+                 $(shell curl-config --cflags 2>/dev/null)
 CFLAGS        += $(INCLUDE) -D__SWITCH__ -DPROJECTNX_VERSION=\"$(APP_VERSION)\" -std=gnu11
 ASFLAGS       := -g $(ARCH)
 LDFLAGS       := -specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) \
                  -Wl,-Map,$(notdir $*.map)
-LIBS          := -lnx
+LIBS          := $(shell curl-config --libs 2>/dev/null) -lnx
 LIBDIRS       := $(PORTLIBS) $(LIBNX)
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
@@ -65,16 +66,19 @@ clean:
 package: all
 	@mkdir -p dist/projectnx/switch/projectnx
 	@cp $(TARGET).nro dist/projectnx/switch/projectnx/projectnx.nro
-	@cp README.md VERSION dist/projectnx/switch/projectnx/
+	@cp README.md VERSION config.example.ini dist/projectnx/switch/projectnx/
 	@echo "Pacote criado em dist/projectnx"
 
 test:
 	@mkdir -p build/host
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
-		source/app.c tests/test_app.c -o build/host/test_app
+		source/app.c source/config.c tests/test_app.c -o build/host/test_app
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude -Itests/stubs \
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/main.c \
 		-o build/host/main_switch_syntax.o
+	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude -Itests/stubs \
+		$(shell curl-config --cflags 2>/dev/null) -c source/network.c \
+		-o build/host/network_switch_syntax.o
 	@build/host/test_app
 
 validate:

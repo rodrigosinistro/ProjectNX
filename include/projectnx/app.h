@@ -10,6 +10,7 @@
 typedef enum {
     PNX_STATE_BOOT = 0,
     PNX_STATE_WELCOME,
+    PNX_STATE_NETWORK_CHECK,
     PNX_STATE_AUTH_REQUIRED,
     PNX_STATE_AUTH_WAITING,
     PNX_STATE_CATALOG,
@@ -23,6 +24,7 @@ typedef enum {
 typedef enum {
     PNX_ACTION_NONE = 0,
     PNX_ACTION_CONFIRM,
+    PNX_ACTION_NETWORK_READY,
     PNX_ACTION_BACK,
     PNX_ACTION_TOGGLE_DEBUG,
     PNX_ACTION_EXIT
@@ -46,4 +48,3 @@ const char *pnx_state_title(PnxState state);
 const char *pnx_state_description(PnxState state);
 
 #endif
-

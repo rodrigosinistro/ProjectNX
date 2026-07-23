@@ -12,6 +12,9 @@ streaming podem mudar sem aviso.
 - A opção de logout removerá os tokens locais.
 - Dumps e logs destinados a diagnóstico precisam ser revisados antes de serem
   compartilhados.
+- `client_secret`, senhas e tokens nunca devem ser colocados no `config.ini`.
+- O `client_id` configurável deve pertencer ao aplicativo público do ProjectNX,
+  sem reutilizar identificadores de outros clientes.
 
 ## Limitação do armazenamento local
 
@@ -28,4 +31,3 @@ credenciais.
 O projeto não pode garantir ausência de bloqueio ou banimento do console. O
 usuário é responsável pela configuração do ambiente, pelas regras dos serviços
 e pela proteção do próprio cartão SD.
-

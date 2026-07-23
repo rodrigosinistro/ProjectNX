@@ -40,11 +40,21 @@ jobs:
           test -s ProjectNX.nro
           test -s dist/projectnx/switch/projectnx/projectnx.nro
           test -s dist/projectnx/SHA256SUMS.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          from struct import unpack_from
+
+          nro = Path("ProjectNX.nro").read_bytes()
+          assert nro[0x10:0x14] == b"NRO0", "cabecalho NRO0 ausente"
+          nro_size = unpack_from("<I", nro, 0x18)[0]
+          assert nro[nro_size:nro_size + 4] == b"ASET", "metadados ASET ausentes"
+          assert b"ProjectNX Contributors" in nro, "NACP do ProjectNX ausente"
+          PY
 
       - name: Upload installable package
         uses: actions/upload-artifact@v7
         with:
-          name: ProjectNX-v0.1.0-preview
+          name: ProjectNX-v0.2.0-preview
           path: dist/projectnx
           if-no-files-found: error
           retention-days: 30
