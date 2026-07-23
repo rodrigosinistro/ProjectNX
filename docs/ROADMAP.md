@@ -7,6 +7,7 @@
 - [x] Leitura básica de controles
 - [x] Detecção portátil/dock
 - [x] Testes locais do núcleo
+- [x] Workflow de compilação automática
 - [ ] Compilação com devkitA64
 - [ ] Teste físico no Switch OLED
 
@@ -70,4 +71,3 @@
 - [ ] Matriz de compatibilidade
 
 Remote Play de um console próprio será avaliado depois do fluxo xCloud estável.
-
