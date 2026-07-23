@@ -1,5 +1,7 @@
 # ProjectNX
 
+[![Build ProjectNX](https://github.com/rodrigosinistro/ProjectNX/actions/workflows/build.yml/badge.svg)](https://github.com/rodrigosinistro/ProjectNX/actions/workflows/build.yml)
+
 Cliente homebrew nativo e não oficial para acessar jogos por nuvem no Nintendo
 Switch. O projeto começa pelo Xbox Cloud Gaming e mantém a arquitetura aberta
 para outros backends no futuro.
@@ -58,6 +60,16 @@ make package
 O pacote será criado em `dist/projectnx/`, já com a estrutura correta para a raiz
 do cartão SD.
 
+### Build automático
+
+Cada envio para a branch `main` dispara uma compilação no GitHub Actions usando
+o ambiente devkitA64. Para baixar:
+
+1. Abra a aba **Actions** do repositório.
+2. Selecione a execução mais recente de **Build ProjectNX**.
+3. Baixe o artefato `ProjectNX-v0.1.0-preview`.
+4. Extraia o ZIP e copie a pasta `switch` para a raiz do cartão SD.
+
 ## Instalação no Switch
 
 1. Copie a pasta `switch/projectnx` do pacote para a raiz do cartão SD.
@@ -86,4 +98,3 @@ make validate
 - [Roadmap](docs/ROADMAP.md)
 - [Segurança e privacidade](docs/SECURITY.md)
 - [Teste no Switch](docs/TESTING_ON_SWITCH.md)
-
