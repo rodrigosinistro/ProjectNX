@@ -1,1 +1,89 @@
 # ProjectNX
+
+Cliente homebrew nativo e não oficial para acessar jogos por nuvem no Nintendo
+Switch. O projeto começa pelo Xbox Cloud Gaming e mantém a arquitetura aberta
+para outros backends no futuro.
+
+> ProjectNX não é afiliado, patrocinado nem aprovado pela Nintendo ou pela
+> Microsoft. Nintendo Switch, Xbox e seus nomes relacionados pertencem aos
+> respectivos titulares.
+
+## Estado atual
+
+Versão `0.1.0-preview`.
+
+Esta primeira versão é um preview técnico do aplicativo. Ela valida:
+
+- inicialização como homebrew nativo;
+- leitura de Joy-Cons e Pro Controller;
+- navegação entre os estados principais;
+- detecção de modo portátil ou dock;
+- tratamento básico de erros;
+- núcleo de estados testável fora do Switch.
+
+Ela ainda **não autentica nem inicia uma transmissão real**. As próximas versões
+adicionarão autenticação por código de dispositivo, catálogo e, por último, a
+sessão WebRTC com decodificação por hardware.
+
+## Controles do preview
+
+| Botão | Ação |
+| --- | --- |
+| `A` | Avançar na demonstração |
+| `B` | Voltar |
+| `X` | Mostrar ou ocultar informações técnicas |
+| `+` | Encerrar |
+
+## Compilação
+
+Requisitos:
+
+- devkitPro;
+- devkitA64;
+- libnx;
+- `DEVKITPRO` configurado no ambiente.
+
+Com a toolchain instalada:
+
+```sh
+make
+```
+
+O resultado será `ProjectNX.nro`. Para criar o pacote de instalação:
+
+```sh
+make package
+```
+
+O pacote será criado em `dist/projectnx/`, já com a estrutura correta para a raiz
+do cartão SD.
+
+## Instalação no Switch
+
+1. Copie a pasta `switch/projectnx` do pacote para a raiz do cartão SD.
+2. Inicie o Homebrew Menu em **title mode**, segurando `R` enquanto abre um jogo.
+3. Abra o ProjectNX.
+
+O modo Álbum oferece memória limitada e não será suportado para streaming.
+
+## Testes locais
+
+O núcleo de estados não depende da libnx:
+
+```sh
+make test
+```
+
+Para verificar a estrutura do projeto:
+
+```sh
+make validate
+```
+
+## Documentação
+
+- [Arquitetura](docs/ARCHITECTURE.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Segurança e privacidade](docs/SECURITY.md)
+- [Teste no Switch](docs/TESTING_ON_SWITCH.md)
+
