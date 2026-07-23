@@ -43,6 +43,8 @@ export INCLUDE := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
                   -I$(LIBNX)/include \
                   -I$(PORTLIBS)/include
 export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+export NROFLAGS += --icon=$(APP_ICON)
+export NROFLAGS += --nacp=$(CURDIR)/$(TARGET).nacp
 
 .PHONY: all clean package test validate toolchain-check $(BUILD)
 
