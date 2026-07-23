@@ -44,7 +44,7 @@ export INCLUDE := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
                   -I$(PORTLIBS)/include
 export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: all clean package test validate toolchain-check
+.PHONY: all clean package test validate toolchain-check $(BUILD)
 
 all: toolchain-check $(BUILD)
 
