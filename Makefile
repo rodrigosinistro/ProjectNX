@@ -76,7 +76,7 @@ test:
 	@build/host/test_app
 
 validate:
-	@scripts/validate.sh
+	@sh scripts/validate.sh
 
 else
 
