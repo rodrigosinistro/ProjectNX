@@ -1,0 +1,51 @@
+name: Build ProjectNX
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build NRO
+    runs-on: ubuntu-24.04
+    container:
+      image: devkitpro/devkita64:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Validate portable core
+        run: make validate
+
+      - name: Build ProjectNX
+        run: make -j2
+
+      - name: Create SD package
+        run: |
+          make package
+          cd dist/projectnx
+          sha256sum switch/projectnx/projectnx.nro > SHA256SUMS.txt
+
+      - name: Verify package
+        run: |
+          test -s ProjectNX.nro
+          test -s dist/projectnx/switch/projectnx/projectnx.nro
+          test -s dist/projectnx/SHA256SUMS.txt
+
+      - name: Upload installable package
+        uses: actions/upload-artifact@v7
+        with:
+          name: ProjectNX-v0.1.0-preview
+          path: dist/projectnx
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 9
