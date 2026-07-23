@@ -1,0 +1,12 @@
+build/
+dist/
+*.elf
+*.nacp
+*.nro
+*.nso
+*.map
+*.o
+*.d
+debug.log
+token.dat
+
