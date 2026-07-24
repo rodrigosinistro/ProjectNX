@@ -12,9 +12,9 @@ para outros backends no futuro.
 
 ## Estado atual
 
-Versão `0.3.1-preview`.
+Versão `0.4.0-preview`.
 
-Esta versão realiza o primeiro login Microsoft real:
+Esta versão realiza o login Microsoft e a primeira autenticação Xbox real:
 
 - inicialização como homebrew nativo;
 - leitura de Joy-Cons e Pro Controller;
@@ -25,15 +25,18 @@ Esta versão realiza o primeiro login Microsoft real:
 - validação do certificado do servidor;
 - leitura segura de `config.ini`;
 - solicitação OAuth 2.0 por código de dispositivo;
+- consentimento limitado a `XboxLive.signin` e `XboxLive.offline_access`;
 - exibição do endereço e do código no Switch;
 - consulta automática e cancelável da autorização;
+- troca do acesso Microsoft por um Xbox User Token oficial;
+- confirmação da identidade Xbox vinculada à conta;
 - tokens mantidos somente em memória durante este preview;
 - tratamento básico de erros;
 - núcleo de estados testável fora do Switch.
 
-Ela ainda **não carrega o catálogo nem inicia uma transmissão real**. O login
-confirma a conta Microsoft pelo fluxo oficial, mas a integração específica com
-os serviços Xbox será pesquisada e implementada separadamente.
+Ela ainda **não carrega o catálogo nem inicia uma transmissão real**. O próximo
+passo será trocar o Xbox User Token por XSTS e validar o perfil Xbox antes de
+pesquisar o catálogo disponível para a conta.
 
 ## Controles do preview
 
@@ -76,7 +79,7 @@ o ambiente devkitA64. Para baixar:
 
 1. Abra a aba **Actions** do repositório.
 2. Selecione a execução mais recente de **Build ProjectNX**.
-3. Baixe o artefato `ProjectNX-v0.3.1-preview`.
+3. Baixe o artefato `ProjectNX-v0.4.0-preview`.
 4. Extraia o ZIP e copie a pasta `switch` para a raiz do cartão SD.
 
 ## Instalação no Switch

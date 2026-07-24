@@ -24,8 +24,9 @@ deve ser tratado como informação sensível. Quem tiver acesso ao cartão poder
 copiá-lo.
 
 Até que uma estratégia segura seja implementada, a versão preview não grava
-credenciais. A versão 0.3 mantém os tokens apenas na memória do processo e os
-apaga ao cancelar, voltar para a tela de login ou encerrar.
+credenciais. As versões preview mantêm os tokens Microsoft e Xbox apenas na
+memória do processo e os apagam ao cancelar, voltar para a tela de login ou
+encerrar.
 
 ## Console modificado
 

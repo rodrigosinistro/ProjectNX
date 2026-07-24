@@ -39,8 +39,9 @@ armazenará a senha da conta Microsoft.
 
 O `client_id` é o identificador público do aplicativo registrado pelo projeto.
 Identificadores privados ou extraídos de aplicativos Xbox não são reutilizados.
-A base 0.3 solicita o código, exibe a URL, respeita o intervalo de consulta
-informado pela Microsoft e mantém os tokens somente em memória.
+A base 0.4 solicita o código com consentimento XboxLive, respeita o intervalo de
+consulta informado pela Microsoft e troca o acesso por um Xbox User Token
+oficial. Os tokens permanecem somente em memória.
 
 ### Catálogo
 

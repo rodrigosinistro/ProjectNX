@@ -23,6 +23,9 @@ static void test_happy_path(void)
     assert(app.state == PNX_STATE_AUTH_WAITING);
 
     pnx_app_dispatch(&app, PNX_ACTION_AUTH_COMPLETE);
+    assert(app.state == PNX_STATE_XBOX_AUTH);
+
+    pnx_app_dispatch(&app, PNX_ACTION_XBOX_COMPLETE);
     assert(app.state == PNX_STATE_CATALOG);
 
     pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
@@ -112,6 +115,9 @@ static void test_auth_wait_requires_completion(void)
     assert(app.state == PNX_STATE_AUTH_WAITING);
 
     pnx_app_dispatch(&app, PNX_ACTION_AUTH_COMPLETE);
+    assert(app.state == PNX_STATE_XBOX_AUTH);
+
+    pnx_app_dispatch(&app, PNX_ACTION_XBOX_COMPLETE);
     assert(app.state == PNX_STATE_CATALOG);
 }
 
@@ -132,6 +138,35 @@ static void test_json_parser(void)
     assert(pnx_json_get_string(json, "escaped", value, sizeof(value)));
     assert(strcmp(value, "Olá") == 0);
     assert(!pnx_json_get_string(json, "ausente", value, sizeof(value)));
+}
+
+static void test_json_escaping(void)
+{
+    char escaped[64];
+
+    assert(pnx_json_escape_string(
+        "token\"com\\escape\n",
+        escaped,
+        sizeof(escaped)));
+    assert(strcmp(escaped, "token\\\"com\\\\escape\\n") == 0);
+    assert(!pnx_json_escape_string("grande", escaped, 4U));
+}
+
+static void test_xbox_user_token_response(void)
+{
+    const char *json =
+        "{"
+        "\"IssueInstant\":\"2026-07-23T12:00:00Z\","
+        "\"Token\":\"opaque-xbox-user-token\","
+        "\"DisplayClaims\":{\"xui\":[{\"uhs\":\"1234567890\"}]}"
+        "}";
+    char token[64];
+    char user_hash[32];
+
+    assert(pnx_json_get_string(json, "Token", token, sizeof(token)));
+    assert(strcmp(token, "opaque-xbox-user-token") == 0);
+    assert(pnx_json_get_string(json, "uhs", user_hash, sizeof(user_hash)));
+    assert(strcmp(user_hash, "1234567890") == 0);
 }
 
 static void test_large_json_string(void)
@@ -177,6 +212,8 @@ int main(void)
     test_config_parser();
     test_auth_wait_requires_completion();
     test_json_parser();
+    test_json_escaping();
+    test_xbox_user_token_response();
     test_large_json_string();
     puts("ProjectNX core tests: OK");
     return 0;

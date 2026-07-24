@@ -320,3 +320,74 @@ bool pnx_json_get_long(const char *json, const char *key, long *output)
     *output = parsed;
     return true;
 }
+
+bool pnx_json_escape_string(
+    const char *input,
+    char *output,
+    size_t output_capacity)
+{
+    static const char hex[] = "0123456789abcdef";
+    size_t output_length = 0U;
+
+    if (input == NULL || output == NULL || output_capacity == 0U) {
+        return false;
+    }
+
+    while (*input != '\0') {
+        const unsigned char value = (unsigned char)*input;
+        const char *escape = NULL;
+
+        switch (value) {
+        case '"':
+            escape = "\\\"";
+            break;
+        case '\\':
+            escape = "\\\\";
+            break;
+        case '\b':
+            escape = "\\b";
+            break;
+        case '\f':
+            escape = "\\f";
+            break;
+        case '\n':
+            escape = "\\n";
+            break;
+        case '\r':
+            escape = "\\r";
+            break;
+        case '\t':
+            escape = "\\t";
+            break;
+        default:
+            break;
+        }
+
+        if (escape != NULL) {
+            if (output_length + 2U >= output_capacity) {
+                return false;
+            }
+            output[output_length++] = escape[0];
+            output[output_length++] = escape[1];
+        } else if (value < 0x20U) {
+            if (output_length + 6U >= output_capacity) {
+                return false;
+            }
+            output[output_length++] = '\\';
+            output[output_length++] = 'u';
+            output[output_length++] = '0';
+            output[output_length++] = '0';
+            output[output_length++] = hex[value >> 4U];
+            output[output_length++] = hex[value & 0x0FU];
+        } else {
+            if (output_length + 1U >= output_capacity) {
+                return false;
+            }
+            output[output_length++] = (char)value;
+        }
+        input++;
+    }
+
+    output[output_length] = '\0';
+    return true;
+}

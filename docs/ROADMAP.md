@@ -28,8 +28,12 @@
 - [ ] Renovação de sessão
 - [ ] Logout e exclusão local dos tokens
 
-## 0.4 — Catálogo
+## 0.4 — Identidade Xbox e catálogo
 
+- [x] Consentimento `XboxLive.signin`
+- [x] Xbox User Token
+- [ ] XSTS para serviços Xbox
+- [ ] Identificação segura do perfil
 - [ ] Descoberta de região
 - [ ] Catálogo autorizado
 - [ ] Pesquisa e filtros

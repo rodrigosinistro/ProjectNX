@@ -1,9 +1,9 @@
 # Teste no Switch OLED
 
-## Objetivo da versão 0.3.1
+## Objetivo da versão 0.4
 
-Confirmar que o ProjectNX solicita um código de dispositivo, mostra a URL
-oficial da Microsoft e detecta a conclusão do login sem gravar tokens no SD.
+Confirmar que o ProjectNX solicita consentimento XboxLive, conclui o login
+Microsoft e troca o acesso por um Xbox User Token sem gravar tokens no SD.
 
 ## Checklist
 
@@ -15,7 +15,11 @@ oficial da Microsoft e detecta a conclusão do login sem gravar tokens no SD.
 - [ ] O diagnóstico informa `Rede: online (HTTP 200)`.
 - [ ] A tela mostra `https://microsoft.com/devicelogin` e um código.
 - [ ] O código pode ser confirmado no celular com a conta Microsoft correta.
-- [ ] O Switch muda automaticamente para `Catálogo de jogos` após o login.
+- [ ] A autorização solicita acesso aos serviços Xbox.
+- [ ] O Switch mostra brevemente `Conectando ao Xbox`.
+- [ ] A tela informa `Conta Xbox conectada`.
+- [ ] O diagnóstico informa `Xbox: USER_AUTHENTICATED | HTTP: 200`.
+- [ ] O Switch muda automaticamente para `Catálogo de jogos`.
 - [ ] `B` cancela um login pendente.
 - [ ] `B` retorna para a tela anterior.
 - [ ] `X` exibe o diagnóstico.

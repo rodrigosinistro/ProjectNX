@@ -52,6 +52,13 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
 
     if (action == PNX_ACTION_AUTH_COMPLETE) {
         if (app->state == PNX_STATE_AUTH_WAITING) {
+            pnx_transition(app, PNX_STATE_XBOX_AUTH);
+        }
+        return;
+    }
+
+    if (action == PNX_ACTION_XBOX_COMPLETE) {
+        if (app->state == PNX_STATE_XBOX_AUTH) {
             pnx_transition(app, PNX_STATE_CATALOG);
         }
         return;
@@ -66,6 +73,9 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
             pnx_transition(app, PNX_STATE_WELCOME);
             break;
         case PNX_STATE_AUTH_WAITING:
+            pnx_transition(app, PNX_STATE_AUTH_REQUIRED);
+            break;
+        case PNX_STATE_XBOX_AUTH:
             pnx_transition(app, PNX_STATE_AUTH_REQUIRED);
             break;
         case PNX_STATE_CATALOG:
@@ -100,6 +110,8 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
         pnx_transition(app, PNX_STATE_AUTH_WAITING);
         break;
     case PNX_STATE_AUTH_WAITING:
+        break;
+    case PNX_STATE_XBOX_AUTH:
         break;
     case PNX_STATE_CATALOG:
         pnx_transition(app, PNX_STATE_STREAM_CONNECTING);
@@ -155,6 +167,9 @@ bool pnx_app_can_transition(PnxState from, PnxState to)
         return to == PNX_STATE_WELCOME || to == PNX_STATE_AUTH_WAITING ||
                to == PNX_STATE_ERROR;
     case PNX_STATE_AUTH_WAITING:
+        return to == PNX_STATE_AUTH_REQUIRED || to == PNX_STATE_XBOX_AUTH ||
+               to == PNX_STATE_ERROR;
+    case PNX_STATE_XBOX_AUTH:
         return to == PNX_STATE_AUTH_REQUIRED || to == PNX_STATE_CATALOG ||
                to == PNX_STATE_ERROR;
     case PNX_STATE_CATALOG:
@@ -183,6 +198,7 @@ const char *pnx_state_name(PnxState state)
         "NETWORK_CHECK",
         "AUTH_REQUIRED",
         "AUTH_WAITING",
+        "XBOX_AUTH",
         "CATALOG",
         "STREAM_CONNECTING",
         "STREAMING",
@@ -204,6 +220,7 @@ const char *pnx_state_title(PnxState state)
         "Verificando conexao",
         "Conectar conta Microsoft",
         "Aguardando autorizacao",
+        "Conectando ao Xbox",
         "Catalogo de jogos",
         "Preparando transmissao",
         "Transmissao ativa",
@@ -225,7 +242,8 @@ const char *pnx_state_description(PnxState state)
         "Testando DNS, sockets e HTTPS/TLS com a Microsoft.",
         "Rede pronta. Pressione A para iniciar o login.",
         "Conclua o login no celular. Pressione B para cancelar.",
-        "Login concluido. O catalogo sera a proxima integracao.",
+        "Solicitando a identidade Xbox da conta autorizada.",
+        "Conta Xbox conectada. O catalogo sera a proxima integracao.",
         "Simulacao: negociando a sessao WebRTC.",
         "Simulacao: video, audio e controles conectados.",
         "Use A ou B para retornar ao estado anterior.",

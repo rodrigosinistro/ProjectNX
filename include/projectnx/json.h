@@ -10,5 +10,9 @@ bool pnx_json_get_string(
     char *output,
     size_t output_capacity);
 bool pnx_json_get_long(const char *json, const char *key, long *output);
+bool pnx_json_escape_string(
+    const char *input,
+    char *output,
+    size_t output_capacity);
 
 #endif

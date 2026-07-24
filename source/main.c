@@ -8,6 +8,7 @@
 #include "projectnx/auth.h"
 #include "projectnx/config.h"
 #include "projectnx/network.h"
+#include "projectnx/xbox.h"
 
 #ifndef PROJECTNX_VERSION
 #define PROJECTNX_VERSION "dev"
@@ -36,7 +37,8 @@ static void draw(
     const PnxApp *app,
     const PnxNetworkStatus *network,
     const PnxConfig *config,
-    const PnxAuthStatus *auth)
+    const PnxAuthStatus *auth,
+    const PnxXboxStatus *xbox)
 {
     printf("\x1b[2J\x1b[H");
     printf("\x1b[36;1mProjectNX\x1b[0m  v%s-preview\n", PROJECTNX_VERSION);
@@ -70,9 +72,15 @@ static void draw(
         printf("\n%s\n", auth->detail);
     }
 
+    if (app->state == PNX_STATE_XBOX_AUTH) {
+        printf("\nMicrosoft autorizada. Conectando a identidade Xbox...\n");
+    }
+
     if (app->state == PNX_STATE_CATALOG &&
-        auth->stage == PNX_AUTH_AUTHENTICATED) {
-        printf("\n\x1b[32;1mConta Microsoft conectada.\x1b[0m\n");
+        auth->stage == PNX_AUTH_AUTHENTICATED &&
+        xbox->stage == PNX_XBOX_USER_AUTHENTICATED) {
+        printf("\n\x1b[32;1mConta Xbox conectada.\x1b[0m\n");
+        printf("Microsoft OAuth + Xbox User Token: OK\n");
         printf("Nenhum token foi gravado no cartao SD.\n");
     }
 
@@ -105,6 +113,14 @@ static void draw(
             "Login: %s | HTTP: %ld\n",
             pnx_auth_stage_name(auth->stage),
             auth->http_status);
+        printf(
+            "Xbox: %s | HTTP: %ld",
+            pnx_xbox_stage_name(xbox->stage),
+            xbox->http_status);
+        if (xbox->xbox_error != 0L) {
+            printf(" | XErr: %ld", xbox->xbox_error);
+        }
+        printf("\n");
     }
 }
 
@@ -124,9 +140,11 @@ int main(int argc, char **argv)
     PnxAuthStatus auth;
     PnxConfig config;
     PnxNetworkStatus network;
+    PnxXboxStatus xbox;
 
     pnx_app_init(&app, docked);
     pnx_auth_init(&auth);
+    pnx_xbox_init(&xbox);
     pnx_config_init(&config);
     (void)pnx_config_load(
         &config,
@@ -142,7 +160,8 @@ int main(int argc, char **argv)
 
         if (action == PNX_ACTION_CONFIRM &&
             app.state == PNX_STATE_AUTH_REQUIRED) {
-            draw(&app, &network, &config, &auth);
+            pnx_xbox_reset(&xbox);
+            draw(&app, &network, &config, &auth, &xbox);
             consoleUpdate(NULL);
             if (pnx_auth_request_device_code(&config, &auth)) {
                 pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
@@ -152,14 +171,16 @@ int main(int argc, char **argv)
         } else {
             if (action == PNX_ACTION_BACK &&
                 (app.state == PNX_STATE_AUTH_WAITING ||
+                 app.state == PNX_STATE_XBOX_AUTH ||
                  app.state == PNX_STATE_CATALOG)) {
                 pnx_auth_reset(&auth);
+                pnx_xbox_reset(&xbox);
             }
             pnx_app_dispatch(&app, action);
         }
 
         if (app.state == PNX_STATE_NETWORK_CHECK) {
-            draw(&app, &network, &config, &auth);
+            draw(&app, &network, &config, &auth, &xbox);
             consoleUpdate(NULL);
 
             if (pnx_network_probe(&network)) {
@@ -176,6 +197,23 @@ int main(int argc, char **argv)
 
             if (poll_result == PNX_AUTH_POLL_COMPLETE) {
                 pnx_app_dispatch(&app, PNX_ACTION_AUTH_COMPLETE);
+                draw(&app, &network, &config, &auth, &xbox);
+                consoleUpdate(NULL);
+
+                if (pnx_xbox_authenticate_user(&auth, &xbox)) {
+                    pnx_app_dispatch(&app, PNX_ACTION_XBOX_COMPLETE);
+                } else {
+                    char error[PNX_ERROR_MESSAGE_CAPACITY];
+                    (void)snprintf(
+                        error,
+                        sizeof(error),
+                        "%.*s",
+                        (int)sizeof(error) - 1,
+                        xbox.detail);
+                    pnx_auth_reset(&auth);
+                    pnx_app_dispatch(&app, PNX_ACTION_BACK);
+                    pnx_app_set_error(&app, error);
+                }
             } else if (poll_result == PNX_AUTH_POLL_FATAL) {
                 char error[PNX_ERROR_MESSAGE_CAPACITY];
                 (void)snprintf(
@@ -190,11 +228,12 @@ int main(int argc, char **argv)
             }
         }
 
-        draw(&app, &network, &config, &auth);
+        draw(&app, &network, &config, &auth, &xbox);
         consoleUpdate(NULL);
         svcSleepThread(50000000L);
     }
 
+    pnx_xbox_reset(&xbox);
     pnx_auth_reset(&auth);
     pnx_network_platform_exit(&network);
     consoleExit(NULL);

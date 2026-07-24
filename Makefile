@@ -13,7 +13,7 @@ SOURCES       := source
 INCLUDES      := include
 APP_TITLE     := ProjectNX
 APP_AUTHOR    := ProjectNX Contributors
-APP_VERSION   := 0.3.1
+APP_VERSION   := 0.4.0
 
 ARCH          := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS        := -g -Wall -Wextra -Werror -O2 -ffunction-sections $(ARCH) \
@@ -85,6 +85,10 @@ test:
 		$(shell curl-config --cflags 2>/dev/null) \
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/auth.c \
 		-o build/host/auth_syntax.o
+	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
+		$(shell curl-config --cflags 2>/dev/null) \
+		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/xbox.c \
+		-o build/host/xbox_syntax.o
 	@build/host/test_app
 
 validate:

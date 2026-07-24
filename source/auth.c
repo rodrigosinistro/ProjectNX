@@ -238,7 +238,7 @@ bool pnx_auth_request_device_code(
     written = snprintf(
         post_fields,
         sizeof(post_fields),
-        "client_id=%s&scope=User.Read%%20openid%%20profile%%20offline_access",
+        "client_id=%s&scope=XboxLive.signin%%20XboxLive.offline_access",
         config->client_id);
     if (written < 0 || (size_t)written >= sizeof(post_fields)) {
         status->stage = PNX_AUTH_FAILED;
@@ -324,12 +324,10 @@ PnxAuthPollResult pnx_auth_poll_token(
     char post_fields[PNX_AUTH_POST_CAPACITY];
     char transport_error[PNX_AUTH_DETAIL_CAPACITY];
     char error_code[96];
-    char id_token[PNX_AUTH_TOKEN_CAPACITY];
     char *escaped_device_code;
     PnxAuthResponse response;
     CURL *encoder;
     bool has_access_token;
-    bool has_id_token;
     int written;
 
     if (!pnx_auth_poll_due(status, now)) {
@@ -403,28 +401,23 @@ PnxAuthPollResult pnx_auth_poll_token(
     }
 
     if (status->http_status == 200L) {
-        memset(id_token, 0, sizeof(id_token));
         has_access_token = pnx_json_get_string(
             response.data,
             "access_token",
             status->access_token,
             sizeof(status->access_token));
-        has_id_token = pnx_json_get_string(
-            response.data,
-            "id_token",
-            id_token,
-            sizeof(id_token));
         (void)pnx_json_get_string(
             response.data,
             "refresh_token",
             status->refresh_token,
             sizeof(status->refresh_token));
-        secure_clear(id_token, sizeof(id_token));
 
-        if (!has_access_token && !has_id_token) {
+        if (!has_access_token) {
             secure_clear(response.data, sizeof(response.data));
             status->stage = PNX_AUTH_FAILED;
-            set_detail(status, "Microsoft confirmou sem retornar um token valido.");
+            set_detail(
+                status,
+                "Microsoft confirmou sem retornar o token de acesso Xbox.");
             return PNX_AUTH_POLL_FATAL;
         }
 

@@ -1,0 +1,35 @@
+#ifndef PROJECTNX_XBOX_H
+#define PROJECTNX_XBOX_H
+
+#include <stdbool.h>
+
+#include "projectnx/auth.h"
+
+#define PNX_XBOX_TOKEN_CAPACITY 16384U
+#define PNX_XBOX_USER_HASH_CAPACITY 128U
+#define PNX_XBOX_DETAIL_CAPACITY 256U
+
+typedef enum {
+    PNX_XBOX_IDLE = 0,
+    PNX_XBOX_CONNECTING,
+    PNX_XBOX_USER_AUTHENTICATED,
+    PNX_XBOX_FAILED
+} PnxXboxStage;
+
+typedef struct {
+    PnxXboxStage stage;
+    long http_status;
+    long xbox_error;
+    char user_token[PNX_XBOX_TOKEN_CAPACITY];
+    char user_hash[PNX_XBOX_USER_HASH_CAPACITY];
+    char detail[PNX_XBOX_DETAIL_CAPACITY];
+} PnxXboxStatus;
+
+void pnx_xbox_init(PnxXboxStatus *status);
+void pnx_xbox_reset(PnxXboxStatus *status);
+bool pnx_xbox_authenticate_user(
+    const PnxAuthStatus *microsoft_auth,
+    PnxXboxStatus *status);
+const char *pnx_xbox_stage_name(PnxXboxStage stage);
+
+#endif
