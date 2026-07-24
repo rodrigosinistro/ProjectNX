@@ -76,10 +76,7 @@ test:
 		source/app.c source/config.c source/json.c tests/test_app.c \
 		-o build/host/test_app
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
-		$(shell curl-config --cflags 2>/dev/null) \
-		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" \
-		source/xbox.c source/json.c tests/test_xbox.c \
-		$(shell curl-config --libs 2>/dev/null) \
+		source/xbox_claims.c source/json.c tests/test_xbox.c \
 		-o build/host/test_xbox
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude -Itests/stubs \
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/main.c \
@@ -95,6 +92,9 @@ test:
 		$(shell curl-config --cflags 2>/dev/null) \
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/xbox.c \
 		-o build/host/xbox_syntax.o
+	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
+		-c source/xbox_claims.c \
+		-o build/host/xbox_claims_syntax.o
 	@build/host/test_app
 	@build/host/test_xbox
 

@@ -46,6 +46,9 @@ ou pareado é preferido. Se o serviço retornar apenas um XUID, ele serve soment
 para validar que a claim foi recebida e não é mostrado integralmente, gravado ou
 registrado. Os tokens permanecem somente em memória.
 
+A interpretação das claims XSTS fica isolada da camada HTTPS, permitindo testes
+portáteis sem vincular bibliotecas do Switch ao executável de teste do host.
+
 O XSTS emite tokens para um `RelyingParty` específico. O preview usa o destino
 público do Xbox para determinar, no hardware, se a aplicação será aceita sem
 configuração adicional ou se precisará ser provisionada no Xbox Partner Center.

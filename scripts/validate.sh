@@ -22,6 +22,7 @@ source/json.c
 source/main.c
 source/network.c
 source/xbox.c
+source/xbox_claims.c
 tests/test_app.c
 tests/test_xbox.c
 tests/stubs/switch.h

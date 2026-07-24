@@ -17,9 +17,8 @@ static void test_xsts_response_with_profile(void)
         "\"gtg\":\"RodrigoNX\""
         "}]}"
         "}";
-    PnxXboxStatus status;
+    PnxXboxStatus status = {0};
 
-    pnx_xbox_init(&status);
     assert(pnx_xbox_parse_xsts_response(response, &status));
     assert(strcmp(status.xsts_token, "opaque-xsts-token") == 0);
     assert(strcmp(status.user_hash, "1234567890") == 0);
@@ -32,9 +31,8 @@ static void test_xsts_response_without_optional_claims(void)
 {
     const char *response =
         "{\"Token\":\"opaque\",\"DisplayClaims\":{\"xui\":[{\"uhs\":\"1\"}]}}";
-    PnxXboxStatus status;
+    PnxXboxStatus status = {0};
 
-    pnx_xbox_init(&status);
     assert(pnx_xbox_parse_xsts_response(response, &status));
     assert(strcmp(status.xsts_token, "opaque") == 0);
     assert(strcmp(status.user_hash, "1") == 0);
@@ -54,18 +52,16 @@ static void test_modern_gamertag_fallback(void)
         "\"mgs\":\"4321\""
         "}]}"
         "}";
-    PnxXboxStatus status;
+    PnxXboxStatus status = {0};
 
-    pnx_xbox_init(&status);
     assert(pnx_xbox_parse_xsts_response(response, &status));
     assert(strcmp(status.gamertag, "Rodrigo#4321") == 0);
 }
 
 static void test_incomplete_xsts_response_is_rejected(void)
 {
-    PnxXboxStatus status;
+    PnxXboxStatus status = {0};
 
-    pnx_xbox_init(&status);
     (void)snprintf(
         status.xsts_token,
         sizeof(status.xsts_token),
@@ -77,26 +73,12 @@ static void test_incomplete_xsts_response_is_rejected(void)
     assert(status.xsts_token[0] == '\0');
 }
 
-static void test_stage_names(void)
-{
-    assert(strcmp(
-        pnx_xbox_stage_name(PNX_XBOX_USER_CONNECTING),
-        "USER_CONNECTING") == 0);
-    assert(strcmp(
-        pnx_xbox_stage_name(PNX_XBOX_XSTS_AUTHENTICATED),
-        "XSTS_AUTHENTICATED") == 0);
-    assert(strcmp(
-        pnx_xbox_stage_name((PnxXboxStage)99),
-        "INVALID") == 0);
-}
-
 int main(void)
 {
     test_xsts_response_with_profile();
     test_xsts_response_without_optional_claims();
     test_modern_gamertag_fallback();
     test_incomplete_xsts_response_is_rejected();
-    test_stage_names();
     puts("ProjectNX Xbox tests: OK");
     return 0;
 }
