@@ -1,6 +1,6 @@
 # Teste no Switch OLED
 
-## Objetivo da versão 0.3
+## Objetivo da versão 0.3.1
 
 Confirmar que o ProjectNX solicita um código de dispositivo, mostra a URL
 oficial da Microsoft e detecta a conclusão do login sem gravar tokens no SD.

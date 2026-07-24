@@ -134,6 +134,40 @@ static void test_json_parser(void)
     assert(!pnx_json_get_string(json, "ausente", value, sizeof(value)));
 }
 
+static void test_large_json_string(void)
+{
+    char json[1200];
+    char value[1030];
+    const char *prefix = "{\"device_code\":\"";
+    const char *suffix =
+        "\",\"verification_uri\":\"https://microsoft.com/devicelogin\"}";
+    const size_t prefix_length = strlen(prefix);
+    const size_t suffix_length = strlen(suffix);
+    size_t index;
+
+    (void)snprintf(json, sizeof(json), "%s", prefix);
+    for (index = 0U; index < 1024U; index++) {
+        json[prefix_length + index] = 'A';
+    }
+    memcpy(
+        json + prefix_length + 1024U,
+        suffix,
+        suffix_length + 1U);
+
+    assert(pnx_json_get_string(
+        json,
+        "device_code",
+        value,
+        sizeof(value)));
+    assert(strlen(value) == 1024U);
+    assert(pnx_json_get_string(
+        json,
+        "verification_uri",
+        value,
+        sizeof(value)));
+    assert(strcmp(value, "https://microsoft.com/devicelogin") == 0);
+}
+
 int main(void)
 {
     test_happy_path();
@@ -143,6 +177,7 @@ int main(void)
     test_config_parser();
     test_auth_wait_requires_completion();
     test_json_parser();
+    test_large_json_string();
     puts("ProjectNX core tests: OK");
     return 0;
 }

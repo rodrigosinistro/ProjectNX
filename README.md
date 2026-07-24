@@ -12,7 +12,7 @@ para outros backends no futuro.
 
 ## Estado atual
 
-Versão `0.3.0-preview`.
+Versão `0.3.1-preview`.
 
 Esta versão realiza o primeiro login Microsoft real:
 
@@ -76,7 +76,7 @@ o ambiente devkitA64. Para baixar:
 
 1. Abra a aba **Actions** do repositório.
 2. Selecione a execução mais recente de **Build ProjectNX**.
-3. Baixe o artefato `ProjectNX-v0.3.0-preview`.
+3. Baixe o artefato `ProjectNX-v0.3.1-preview`.
 4. Extraia o ZIP e copie a pasta `switch` para a raiz do cartão SD.
 
 ## Instalação no Switch

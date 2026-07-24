@@ -36,7 +36,7 @@ for required_file in $required_files; do
 done
 
 version=$(tr -d '\r\n' < VERSION)
-if [ "$version" != "0.3.0" ]; then
+if [ "$version" != "0.3.1" ]; then
     echo "Versao inesperada em VERSION: $version" >&2
     exit 1
 fi

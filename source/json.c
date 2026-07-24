@@ -195,6 +195,50 @@ static bool parse_string(
     return true;
 }
 
+static bool skip_string(const char *cursor, const char **end)
+{
+    if (cursor == NULL || cursor[0] != '"') {
+        return false;
+    }
+
+    cursor++;
+    while (*cursor != '\0') {
+        if ((unsigned char)*cursor < 0x20U) {
+            return false;
+        }
+        if (*cursor == '"') {
+            if (end != NULL) {
+                *end = cursor + 1;
+            }
+            return true;
+        }
+        if (*cursor != '\\') {
+            cursor++;
+            continue;
+        }
+
+        cursor++;
+        if (*cursor == 'u') {
+            size_t index;
+            cursor++;
+            for (index = 0U; index < 4U; index++) {
+                if (hex_value(cursor[index]) < 0) {
+                    return false;
+                }
+            }
+            cursor += 4;
+        } else if (*cursor == '"' || *cursor == '\\' || *cursor == '/' ||
+                   *cursor == 'b' || *cursor == 'f' || *cursor == 'n' ||
+                   *cursor == 'r' || *cursor == 't') {
+            cursor++;
+        } else {
+            return false;
+        }
+    }
+
+    return false;
+}
+
 static const char *find_value(const char *json, const char *key)
 {
     const char *cursor;
@@ -214,17 +258,22 @@ static const char *find_value(const char *json, const char *key)
             continue;
         }
 
-        if (!parse_string(
-                cursor,
-                parsed_key,
-                sizeof(parsed_key),
-                &after_string)) {
+        if (!skip_string(cursor, &after_string)) {
             return NULL;
         }
 
         after_key = skip_whitespace(after_string);
-        if (*after_key == ':' && strcmp(parsed_key, key) == 0) {
-            return skip_whitespace(after_key + 1);
+        if (*after_key == ':') {
+            if (!parse_string(
+                    cursor,
+                    parsed_key,
+                    sizeof(parsed_key),
+                    NULL)) {
+                return NULL;
+            }
+            if (strcmp(parsed_key, key) == 0) {
+                return skip_whitespace(after_key + 1);
+            }
         }
         cursor = after_string;
     }

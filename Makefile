@@ -13,7 +13,7 @@ SOURCES       := source
 INCLUDES      := include
 APP_TITLE     := ProjectNX
 APP_AUTHOR    := ProjectNX Contributors
-APP_VERSION   := 0.3.0
+APP_VERSION   := 0.3.1
 
 ARCH          := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS        := -g -Wall -Wextra -Werror -O2 -ffunction-sections $(ARCH) \
