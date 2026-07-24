@@ -13,7 +13,7 @@ SOURCES       := source
 INCLUDES      := include
 APP_TITLE     := ProjectNX
 APP_AUTHOR    := ProjectNX Contributors
-APP_VERSION   := 0.4.0
+APP_VERSION   := 0.5.0
 
 ARCH          := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS        := -g -Wall -Wextra -Werror -O2 -ffunction-sections $(ARCH) \
@@ -75,6 +75,12 @@ test:
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
 		source/app.c source/config.c source/json.c tests/test_app.c \
 		-o build/host/test_app
+	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
+		$(shell curl-config --cflags 2>/dev/null) \
+		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" \
+		source/xbox.c source/json.c tests/test_xbox.c \
+		$(shell curl-config --libs 2>/dev/null) \
+		-o build/host/test_xbox
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude -Itests/stubs \
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/main.c \
 		-o build/host/main_switch_syntax.o
@@ -90,6 +96,7 @@ test:
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/xbox.c \
 		-o build/host/xbox_syntax.o
 	@build/host/test_app
+	@build/host/test_xbox
 
 validate:
 	@sh scripts/validate.sh

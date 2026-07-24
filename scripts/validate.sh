@@ -23,6 +23,7 @@ source/main.c
 source/network.c
 source/xbox.c
 tests/test_app.c
+tests/test_xbox.c
 tests/stubs/switch.h
 docs/ARCHITECTURE.md
 docs/ROADMAP.md
@@ -38,7 +39,7 @@ for required_file in $required_files; do
 done
 
 version=$(tr -d '\r\n' < VERSION)
-if [ "$version" != "0.4.0" ]; then
+if [ "$version" != "0.5.0" ]; then
     echo "Versao inesperada em VERSION: $version" >&2
     exit 1
 fi

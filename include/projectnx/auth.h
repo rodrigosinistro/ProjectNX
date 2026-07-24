@@ -46,6 +46,7 @@ typedef struct {
 } PnxAuthStatus;
 
 void pnx_auth_init(PnxAuthStatus *status);
+void pnx_auth_clear_tokens(PnxAuthStatus *status);
 void pnx_auth_reset(PnxAuthStatus *status);
 bool pnx_auth_request_device_code(
     const PnxConfig *config,

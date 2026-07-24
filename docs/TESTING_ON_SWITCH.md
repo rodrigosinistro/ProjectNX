@@ -1,9 +1,10 @@
 # Teste no Switch OLED
 
-## Objetivo da versão 0.4
+## Objetivo da versão 0.5
 
 Confirmar que o ProjectNX solicita consentimento XboxLive, conclui o login
-Microsoft e troca o acesso por um Xbox User Token sem gravar tokens no SD.
+Microsoft, obtém um Xbox User Token e solicita a autorização XSTS para o
+sandbox `RETAIL`, sem gravar tokens no SD.
 
 ## Checklist
 
@@ -17,8 +18,10 @@ Microsoft e troca o acesso por um Xbox User Token sem gravar tokens no SD.
 - [ ] O código pode ser confirmado no celular com a conta Microsoft correta.
 - [ ] A autorização solicita acesso aos serviços Xbox.
 - [ ] O Switch mostra brevemente `Conectando ao Xbox`.
-- [ ] A tela informa `Conta Xbox conectada`.
-- [ ] O diagnóstico informa `Xbox: USER_AUTHENTICATED | HTTP: 200`.
+- [ ] A tela passa pelas etapas Xbox User Token e XSTS.
+- [ ] A tela informa `Perfil Xbox validado por XSTS`.
+- [ ] O Gamertag correto aparece, caso a claim seja retornada.
+- [ ] O diagnóstico informa `Xbox: XSTS_AUTHENTICATED | HTTP: 200`.
 - [ ] O Switch muda automaticamente para `Catálogo de jogos`.
 - [ ] `B` cancela um login pendente.
 - [ ] `B` retorna para a tela anterior.
@@ -36,5 +39,11 @@ Microsoft e troca o acesso por um Xbox User Token sem gravar tokens no SD.
 - portátil ou dock;
 - etapa em que a falha ocorreu;
 - fotografia da mensagem apresentada.
+- valor de `XErr`, se o diagnóstico mostrar um.
 
-Não compartilhe arquivos de token ou dados da conta.
+Se o XSTS recusar o `RelyingParty`, a versão deverá mostrar uma mensagem de erro
+e preservar `HTTP` e `XErr` no diagnóstico. Isso indicará a necessidade de
+provisionamento no Xbox Partner Center, sem tentar contornar a autorização.
+
+Não compartilhe arquivos de token, códigos de login, identificadores ou outros
+dados da conta.

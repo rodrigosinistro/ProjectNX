@@ -190,7 +190,7 @@ void pnx_auth_init(PnxAuthStatus *status)
     set_detail(status, "Login ainda nao iniciado.");
 }
 
-void pnx_auth_reset(PnxAuthStatus *status)
+void pnx_auth_clear_tokens(PnxAuthStatus *status)
 {
     if (status == NULL) {
         return;
@@ -198,6 +198,14 @@ void pnx_auth_reset(PnxAuthStatus *status)
     secure_clear(status->access_token, sizeof(status->access_token));
     secure_clear(status->refresh_token, sizeof(status->refresh_token));
     secure_clear(status->device_code, sizeof(status->device_code));
+}
+
+void pnx_auth_reset(PnxAuthStatus *status)
+{
+    if (status == NULL) {
+        return;
+    }
+    pnx_auth_clear_tokens(status);
     pnx_auth_init(status);
 }
 

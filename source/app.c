@@ -243,7 +243,7 @@ const char *pnx_state_description(PnxState state)
         "Rede pronta. Pressione A para iniciar o login.",
         "Conclua o login no celular. Pressione B para cancelar.",
         "Solicitando a identidade Xbox da conta autorizada.",
-        "Conta Xbox conectada. O catalogo sera a proxima integracao.",
+        "Perfil Xbox validado por XSTS. O catalogo sera a proxima integracao.",
         "Simulacao: negociando a sessao WebRTC.",
         "Simulacao: video, audio e controles conectados.",
         "Use A ou B para retornar ao estado anterior.",

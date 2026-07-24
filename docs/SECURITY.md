@@ -8,6 +8,8 @@ streaming podem mudar sem aviso.
 - O aplicativo não pede a senha da Microsoft.
 - O login será feito por código de dispositivo nos servidores oficiais.
 - Tokens nunca serão escritos em logs.
+- Identificadores anonimizados são preferidos; um XUID eventualmente retornado
+  não será exibido integralmente nem gravado.
 - Arquivos de autenticação ficam fora do pacote de atualização.
 - A opção de logout removerá os tokens locais.
 - Dumps e logs destinados a diagnóstico precisam ser revisados antes de serem
@@ -24,9 +26,10 @@ deve ser tratado como informação sensível. Quem tiver acesso ao cartão poder
 copiá-lo.
 
 Até que uma estratégia segura seja implementada, a versão preview não grava
-credenciais. As versões preview mantêm os tokens Microsoft e Xbox apenas na
-memória do processo e os apagam ao cancelar, voltar para a tela de login ou
-encerrar.
+credenciais. As versões preview mantêm os tokens Microsoft, Xbox User Token e
+XSTS apenas na memória do processo. Tokens intermediários são apagados assim
+que deixam de ser necessários; o restante é apagado ao cancelar, voltar para a
+tela de login ou encerrar.
 
 ## Console modificado
 

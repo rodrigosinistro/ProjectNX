@@ -39,9 +39,16 @@ armazenará a senha da conta Microsoft.
 
 O `client_id` é o identificador público do aplicativo registrado pelo projeto.
 Identificadores privados ou extraídos de aplicativos Xbox não são reutilizados.
-A base 0.4 solicita o código com consentimento XboxLive, respeita o intervalo de
-consulta informado pela Microsoft e troca o acesso por um Xbox User Token
-oficial. Os tokens permanecem somente em memória.
+A base 0.5 solicita o código com consentimento XboxLive, respeita o intervalo de
+consulta informado pela Microsoft, obtém o Xbox User Token e solicita um
+X-token ao XSTS para o sandbox `RETAIL`. O identificador anonimizado do parceiro
+ou pareado é preferido. Se o serviço retornar apenas um XUID, ele serve somente
+para validar que a claim foi recebida e não é mostrado integralmente, gravado ou
+registrado. Os tokens permanecem somente em memória.
+
+O XSTS emite tokens para um `RelyingParty` específico. O preview usa o destino
+público do Xbox para determinar, no hardware, se a aplicação será aceita sem
+configuração adicional ou se precisará ser provisionada no Xbox Partner Center.
 
 ### Catálogo
 

@@ -28,12 +28,18 @@
 - [ ] Renovação de sessão
 - [ ] Logout e exclusão local dos tokens
 
-## 0.4 — Identidade Xbox e catálogo
+## 0.4 — Identidade Xbox
 
 - [x] Consentimento `XboxLive.signin`
 - [x] Xbox User Token
-- [ ] XSTS para serviços Xbox
-- [ ] Identificação segura do perfil
+
+## 0.5 — XSTS e perfil
+
+- [x] Solicitação XSTS para o sandbox `RETAIL`
+- [x] Leitura segura de Gamertag, identificador anonimizado e validade
+- [x] Remoção dos tokens intermediários da memória
+- [ ] Validação física do `RelyingParty` no Switch
+- [ ] Provisionamento no Xbox Partner Center, se exigido
 - [ ] Descoberta de região
 - [ ] Catálogo autorizado
 - [ ] Pesquisa e filtros
@@ -41,7 +47,7 @@
 - [ ] Favoritos
 - [ ] Estados de fila e indisponibilidade
 
-## 0.5 — Transporte
+## 0.6 — Transporte
 
 - [ ] Criação da sessão de streaming
 - [ ] Oferta/resposta SDP
@@ -49,7 +55,7 @@
 - [ ] Canais de áudio, vídeo, entrada e mensagens
 - [ ] Keepalive e reconexão
 
-## 0.6 — Reprodução
+## 0.7 — Reprodução
 
 - [ ] Decodificação H.264 por NVDEC
 - [ ] Renderização por GPU
@@ -57,7 +63,7 @@
 - [ ] Sincronização A/V
 - [ ] Escalonamento 720p/1080p
 
-## 0.7 — Controles e estabilidade
+## 0.8 — Controles e estabilidade
 
 - [ ] Joy-Con e Pro Controller
 - [ ] Mapeamento configurável

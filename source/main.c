@@ -74,13 +74,20 @@ static void draw(
 
     if (app->state == PNX_STATE_XBOX_AUTH) {
         printf("\nMicrosoft autorizada. Conectando a identidade Xbox...\n");
+        printf("%s\n", xbox->detail);
     }
 
     if (app->state == PNX_STATE_CATALOG &&
         auth->stage == PNX_AUTH_AUTHENTICATED &&
-        xbox->stage == PNX_XBOX_USER_AUTHENTICATED) {
-        printf("\n\x1b[32;1mConta Xbox conectada.\x1b[0m\n");
-        printf("Microsoft OAuth + Xbox User Token: OK\n");
+        xbox->stage == PNX_XBOX_XSTS_AUTHENTICATED) {
+        printf("\n\x1b[32;1mPerfil Xbox validado por XSTS.\x1b[0m\n");
+        if (xbox->gamertag[0] != '\0') {
+            printf("Jogador: \x1b[36;1m%s\x1b[0m\n", xbox->gamertag);
+        }
+        printf("Microsoft OAuth + User Token + XSTS: OK\n");
+        if (xbox->profile_id[0] != '\0') {
+            printf("Identificador Xbox recebido e mantido em memoria.\n");
+        }
         printf("Nenhum token foi gravado no cartao SD.\n");
     }
 
@@ -121,6 +128,12 @@ static void draw(
             printf(" | XErr: %ld", xbox->xbox_error);
         }
         printf("\n");
+        if (xbox->gamertag[0] != '\0') {
+            printf("Perfil Xbox: %s\n", xbox->gamertag);
+        }
+        if (xbox->not_after[0] != '\0') {
+            printf("XSTS valido ate: %s\n", xbox->not_after);
+        }
     }
 }
 
@@ -201,7 +214,24 @@ int main(int argc, char **argv)
                 consoleUpdate(NULL);
 
                 if (pnx_xbox_authenticate_user(&auth, &xbox)) {
-                    pnx_app_dispatch(&app, PNX_ACTION_XBOX_COMPLETE);
+                    pnx_auth_clear_tokens(&auth);
+                    draw(&app, &network, &config, &auth, &xbox);
+                    consoleUpdate(NULL);
+
+                    if (pnx_xbox_authorize_xsts(&xbox)) {
+                        pnx_app_dispatch(&app, PNX_ACTION_XBOX_COMPLETE);
+                    } else {
+                        char error[PNX_ERROR_MESSAGE_CAPACITY];
+                        (void)snprintf(
+                            error,
+                            sizeof(error),
+                            "%.*s",
+                            (int)sizeof(error) - 1,
+                            xbox.detail);
+                        pnx_auth_reset(&auth);
+                        pnx_app_dispatch(&app, PNX_ACTION_BACK);
+                        pnx_app_set_error(&app, error);
+                    }
                 } else {
                     char error[PNX_ERROR_MESSAGE_CAPACITY];
                     (void)snprintf(
