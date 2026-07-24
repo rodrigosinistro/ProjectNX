@@ -1,5 +1,6 @@
 #include "projectnx/app.h"
 #include "projectnx/config.h"
+#include "projectnx/json.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -21,7 +22,7 @@ static void test_happy_path(void)
     pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
     assert(app.state == PNX_STATE_AUTH_WAITING);
 
-    pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
+    pnx_app_dispatch(&app, PNX_ACTION_AUTH_COMPLETE);
     assert(app.state == PNX_STATE_CATALOG);
 
     pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
@@ -97,6 +98,42 @@ static void test_config_parser(void)
     assert(!pnx_config_validate_client_id("nao-e-um-guid"));
 }
 
+static void test_auth_wait_requires_completion(void)
+{
+    PnxApp app;
+
+    pnx_app_init(&app, false);
+    pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
+    pnx_app_dispatch(&app, PNX_ACTION_NETWORK_READY);
+    pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
+    assert(app.state == PNX_STATE_AUTH_WAITING);
+
+    pnx_app_dispatch(&app, PNX_ACTION_CONFIRM);
+    assert(app.state == PNX_STATE_AUTH_WAITING);
+
+    pnx_app_dispatch(&app, PNX_ACTION_AUTH_COMPLETE);
+    assert(app.state == PNX_STATE_CATALOG);
+}
+
+static void test_json_parser(void)
+{
+    const char *json =
+        "{\"user_code\":\"ABCD-EFGH\",\"expires_in\":900,"
+        "\"message\":\"Linha 1\\nLinha 2\",\"escaped\":\"Ol\\u00e1\"}";
+    char value[64];
+    long number = 0L;
+
+    assert(pnx_json_get_string(json, "user_code", value, sizeof(value)));
+    assert(strcmp(value, "ABCD-EFGH") == 0);
+    assert(pnx_json_get_long(json, "expires_in", &number));
+    assert(number == 900L);
+    assert(pnx_json_get_string(json, "message", value, sizeof(value)));
+    assert(strcmp(value, "Linha 1\nLinha 2") == 0);
+    assert(pnx_json_get_string(json, "escaped", value, sizeof(value)));
+    assert(strcmp(value, "Olá") == 0);
+    assert(!pnx_json_get_string(json, "ausente", value, sizeof(value)));
+}
+
 int main(void)
 {
     test_happy_path();
@@ -104,6 +141,8 @@ int main(void)
     test_error_recovery();
     test_transition_guard();
     test_config_parser();
+    test_auth_wait_requires_completion();
+    test_json_parser();
     puts("ProjectNX core tests: OK");
     return 0;
 }

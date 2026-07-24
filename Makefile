@@ -13,7 +13,7 @@ SOURCES       := source
 INCLUDES      := include
 APP_TITLE     := ProjectNX
 APP_AUTHOR    := ProjectNX Contributors
-APP_VERSION   := 0.2.0
+APP_VERSION   := 0.3.0
 
 ARCH          := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS        := -g -Wall -Wextra -Werror -O2 -ffunction-sections $(ARCH) \
@@ -67,18 +67,24 @@ package: all
 	@mkdir -p dist/projectnx/switch/projectnx
 	@cp $(TARGET).nro dist/projectnx/switch/projectnx/projectnx.nro
 	@cp README.md VERSION config.example.ini dist/projectnx/switch/projectnx/
+	@cp config.example.ini dist/projectnx/switch/projectnx/config.ini
 	@echo "Pacote criado em dist/projectnx"
 
 test:
 	@mkdir -p build/host
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
-		source/app.c source/config.c tests/test_app.c -o build/host/test_app
+		source/app.c source/config.c source/json.c tests/test_app.c \
+		-o build/host/test_app
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude -Itests/stubs \
 		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/main.c \
 		-o build/host/main_switch_syntax.o
 	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude -Itests/stubs \
 		$(shell curl-config --cflags 2>/dev/null) -c source/network.c \
 		-o build/host/network_switch_syntax.o
+	@cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude \
+		$(shell curl-config --cflags 2>/dev/null) \
+		-DPROJECTNX_VERSION=\"$(APP_VERSION)\" -c source/auth.c \
+		-o build/host/auth_syntax.o
 	@build/host/test_app
 
 validate:

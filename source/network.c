@@ -6,6 +6,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifndef PROJECTNX_VERSION
+#define PROJECTNX_VERSION "dev"
+#endif
+
 #define PNX_IDENTITY_DISCOVERY_URL \
     "https://login.microsoftonline.com/consumers/v2.0/.well-known/openid-configuration"
 
@@ -102,7 +106,7 @@ bool pnx_network_probe(PnxNetworkStatus *status)
     (void)curl_easy_setopt(
         curl,
         CURLOPT_USERAGENT,
-        "ProjectNX/0.2.0 (Nintendo Switch; libnx)");
+        "ProjectNX/" PROJECTNX_VERSION " (Nintendo Switch; libnx)");
     (void)curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, discard_response);
     (void)curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     (void)curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 3L);

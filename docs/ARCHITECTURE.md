@@ -37,10 +37,10 @@ Usará OAuth 2.0 Device Authorization Grant. O usuário digitará no celular ou
 computador o código mostrado no Switch. O ProjectNX nunca solicitará nem
 armazenará a senha da conta Microsoft.
 
-O `client_id` será o identificador público de um aplicativo registrado pelo
-projeto. Identificadores privados ou extraídos de aplicativos Xbox não serão
-reutilizados. A base 0.2 verifica DNS, sockets e HTTPS/TLS diretamente no
-documento de descoberta do Microsoft Identity antes de entrar no fluxo de login.
+O `client_id` é o identificador público do aplicativo registrado pelo projeto.
+Identificadores privados ou extraídos de aplicativos Xbox não são reutilizados.
+A base 0.3 solicita o código, exibe a URL, respeita o intervalo de consulta
+informado pela Microsoft e mantém os tokens somente em memória.
 
 ### Catálogo
 

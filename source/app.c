@@ -50,6 +50,13 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
         return;
     }
 
+    if (action == PNX_ACTION_AUTH_COMPLETE) {
+        if (app->state == PNX_STATE_AUTH_WAITING) {
+            pnx_transition(app, PNX_STATE_CATALOG);
+        }
+        return;
+    }
+
     if (action == PNX_ACTION_BACK) {
         switch (app->state) {
         case PNX_STATE_NETWORK_CHECK:
@@ -93,7 +100,6 @@ void pnx_app_dispatch(PnxApp *app, PnxAction action)
         pnx_transition(app, PNX_STATE_AUTH_WAITING);
         break;
     case PNX_STATE_AUTH_WAITING:
-        pnx_transition(app, PNX_STATE_CATALOG);
         break;
     case PNX_STATE_CATALOG:
         pnx_transition(app, PNX_STATE_STREAM_CONNECTING);
@@ -217,9 +223,9 @@ const char *pnx_state_description(PnxState state)
         "Carregando os servicos essenciais.",
         "Pressione A para testar a conexao segura.",
         "Testando DNS, sockets e HTTPS/TLS com a Microsoft.",
-        "Rede pronta. O login usara codigo de dispositivo.",
-        "Simulacao: confirme para concluir o login.",
-        "Simulacao: um jogo demonstrativo esta selecionado.",
+        "Rede pronta. Pressione A para iniciar o login.",
+        "Conclua o login no celular. Pressione B para cancelar.",
+        "Login concluido. O catalogo sera a proxima integracao.",
         "Simulacao: negociando a sessao WebRTC.",
         "Simulacao: video, audio e controles conectados.",
         "Use A ou B para retornar ao estado anterior.",

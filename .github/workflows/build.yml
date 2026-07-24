@@ -39,6 +39,9 @@ jobs:
         run: |
           test -s ProjectNX.nro
           test -s dist/projectnx/switch/projectnx/projectnx.nro
+          test -s dist/projectnx/switch/projectnx/config.ini
+          grep -q '^client_id=d283012d-6560-413a-be24-f7563c1a7467$' \
+            dist/projectnx/switch/projectnx/config.ini
           test -s dist/projectnx/SHA256SUMS.txt
           python3 - <<'PY'
           from pathlib import Path
@@ -54,7 +57,7 @@ jobs:
       - name: Upload installable package
         uses: actions/upload-artifact@v7
         with:
-          name: ProjectNX-v0.2.0-preview
+          name: ProjectNX-v0.3.0-preview
           path: dist/projectnx
           if-no-files-found: error
           retention-days: 30

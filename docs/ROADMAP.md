@@ -15,16 +15,16 @@
 
 - [x] Inicialização de sockets
 - [x] Cliente HTTPS/TLS
-- [ ] JSON
+- [x] JSON
 - [x] Configuração persistente
 - [ ] Logger com remoção de dados sensíveis
 - [ ] Interface gráfica inicial
 
 ## 0.3 — Autenticação
 
-- [ ] OAuth por código de dispositivo
-- [ ] Tela de código e URL
-- [ ] Polling cancelável
+- [x] OAuth por código de dispositivo
+- [x] Tela de código e URL
+- [x] Polling cancelável
 - [ ] Renovação de sessão
 - [ ] Logout e exclusão local dos tokens
 
